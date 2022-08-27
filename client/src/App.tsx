@@ -3,31 +3,15 @@ import { Chat } from './components/Chat'
 import { Home } from './components/Home'
 import { Nickname } from './components/Nickname'
 
-interface UserState {
-  nickname?: string
-  roomId?: string
-}
-
 export default function App() {
-  const [user, setUser] = useState<UserState>({
-    nickname: undefined,
-    roomId: undefined,
-  })
+  const [nickname, setNickname] = useState<string>()
+  const [roomId, setRoomId] = useState<string>()
 
-  const setRoomId = (roomId: string) => {
-    setUser((user) => {
-      return {
-        nickname: user.nickname,
-        roomId,
-      }
-    })
-  }
-
-  if (user.roomId) {
+  if (roomId) {
     return <Nickname />
   }
 
-  if (user.roomId && user.nickname) {
+  if (roomId && nickname) {
     return <Chat />
   }
 
