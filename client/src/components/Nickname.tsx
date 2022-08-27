@@ -1,4 +1,8 @@
-export const Nickname: React.FC = () => {
+interface NicknameProps {
+  setNickname: (nickname: string) => void
+}
+
+export const Nickname: React.FC<NicknameProps> = ({ setNickname }) => {
   return (
     <div className='bg-gray-50'>
       <div className='container max-w-screen-sm mx-auto'>
@@ -9,6 +13,7 @@ export const Nickname: React.FC = () => {
             type='text'
             name='nickname'
             placeholder='Your nickname'
+            onChange={(e) => setNickname(e.target.value)}
           />
           <button className='bg-sky-500 hover:bg-sky-400 px-4 py-2 block w-full rounded-lg focus:ring-4 focus:ring-sky-400'>
             Submit

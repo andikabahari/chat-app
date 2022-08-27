@@ -1,5 +1,4 @@
-import { createContext, useState } from 'react'
-import { Chat } from './components/Chat'
+import { useState } from 'react'
 import { Home } from './components/Home'
 import { Nickname } from './components/Nickname'
 
@@ -8,11 +7,7 @@ export default function App() {
   const [roomId, setRoomId] = useState<string>()
 
   if (roomId) {
-    return <Nickname />
-  }
-
-  if (roomId && nickname) {
-    return <Chat />
+    return <Nickname setNickname={setNickname} />
   }
 
   return <Home setRoomId={setRoomId} />
