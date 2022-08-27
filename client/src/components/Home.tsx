@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { v4 as uuidv4 } from 'uuid'
+import uuid from 'short-uuid'
 
 interface HomeProps {
   setRoomId: (roomId: string) => void
@@ -16,7 +16,7 @@ export const Home: React.FC<HomeProps> = ({ setRoomId }) => {
           <button
             className='bg-teal-500 hover:bg-teal-400 px-4 py-2 block w-full rounded-lg focus:ring-4 focus:ring-teal-400'
             onClick={() => {
-              const roomId = uuidv4()
+              const roomId = uuid().generate()
               setRoomId(roomId)
             }}
           >
