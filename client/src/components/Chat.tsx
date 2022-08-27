@@ -12,7 +12,7 @@ export const Chat: React.FC = () => {
           <div className='bg-gray-200 p-4'>
             <div className='flex'>
               <input
-                className='py-2 px-2 rounded-xl w-full  focus:ring-0 focus:ring-offset-0'
+                className='py-2 px-2 rounded-xl w-full'
                 type='text'
                 name='message'
                 placeholder='Your message'

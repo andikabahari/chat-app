@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply text-slate-700;
+}
+
 .h-100vh {
   height: 100vh;
 }
