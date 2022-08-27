@@ -1,4 +1,11 @@
-export const Chat: React.FC = () => {
+interface ChatProps {
+  nickname: string
+  roomId: string
+}
+
+export const Chat: React.FC<ChatProps> = ({ nickname, roomId }) => {
+  console.log(nickname, roomId)
+
   return (
     <div className='bg-gray-50'>
       <div className='container max-w-screen-lg mx-auto'>
