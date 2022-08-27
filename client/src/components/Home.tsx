@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
 interface HomeProps {
@@ -5,6 +6,8 @@ interface HomeProps {
 }
 
 export const Home: React.FC<HomeProps> = ({ setRoomId }) => {
+  const [existingRoomId, setExistingRoomId] = useState<string>()
+
   return (
     <div className='bg-gray-50'>
       <div className='container max-w-screen-sm mx-auto'>
@@ -25,8 +28,16 @@ export const Home: React.FC<HomeProps> = ({ setRoomId }) => {
             type='text'
             name='room_id'
             placeholder='Room ID'
+            onChange={(e) => setExistingRoomId(e.target.value)}
           />
-          <button className='bg-sky-500 hover:bg-sky-400 px-4 py-2 block w-full rounded-lg focus:ring-4 focus:ring-sky-400'>
+          <button
+            className='bg-sky-500 hover:bg-sky-400 px-4 py-2 block w-full rounded-lg focus:ring-4 focus:ring-sky-400'
+            onClick={() => {
+              if (existingRoomId) {
+                setRoomId(existingRoomId)
+              }
+            }}
+          >
             Join
           </button>
         </div>
