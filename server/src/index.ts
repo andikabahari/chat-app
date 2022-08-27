@@ -1,10 +1,11 @@
 import express from 'express'
+import path from 'path'
 
 const app = express()
-const port = process.env.PORT || 8080
+const port = process.env.PORT || 5000
 
 app.get('/', (req, res) => {
-  res.send('<h1>Hello world</h1>')
+  res.sendFile(path.resolve(__dirname + '/../public/index.html'))
 })
 
 app.listen(port, () => console.log(`Server running on port ${port}`))
