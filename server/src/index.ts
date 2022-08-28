@@ -7,7 +7,12 @@ const app = express()
 const server = http.createServer(app)
 const port = process.env.PORT || 5000
 
-const io = new Server(server)
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST'],
+  },
+})
 
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname + '/../public/index.html'))
@@ -23,6 +28,10 @@ io.on('connection', (socket) => {
   socket.on('chat message', (msg) => {
     console.log('message: ' + msg)
     io.emit('chat message', msg)
+  })
+
+  socket.on('ping', () => {
+    io.emit('pong')
   })
 })
 
