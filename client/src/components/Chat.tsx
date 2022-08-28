@@ -49,8 +49,9 @@ export const Chat: React.FC<ChatProps> = ({ nickname, roomId }) => {
         <div className='flex flex-col h-100vh'>
           <div className='bg-white h-full px-3 overflow-y-auto'>
             <div className='mb-5'>
-              <p>Connected: {'' + isConnected}</p>
-              <p>Last pong: {lastPong || '-'}</p>
+              <div>Room ID: {roomId}</div>
+              <div>Connected: {'' + isConnected}</div>
+              <div>Last pong: {lastPong || '-'}</div>
               <button
                 className='bg-teal-500 hover:bg-teal-400 text-sm px-2 py-1 block rounded-lg focus:ring-4 focus:ring-teal-400'
                 onClick={() => socket.emit('ping')}
