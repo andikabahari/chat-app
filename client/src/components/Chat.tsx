@@ -8,34 +8,31 @@ interface ChatProps {
   roomId: string
 }
 
+interface ChatPayload {
+  nickname: string
+  roomId: string
+  message: string
+}
+
 export const Chat: React.FC<ChatProps> = ({ nickname, roomId }) => {
   const [isConnected, setIsConnected] = useState(socket.connected)
   const [lastPong, setLastPong] = useState<string | null>(null)
+  const [chat, setChat] = useState<ChatPayload[]>([])
+  const [message, setMessage] = useState<string | null>(null)
 
   useEffect(() => {
-    socket.on('connect', () => {
-      setIsConnected(true)
-    })
-
-    socket.on('disconnect', () => {
-      setIsConnected(false)
-    })
-
-    socket.on('pong', () => {
-      const date = new Date().toISOString()
-      setLastPong(date)
-    })
+    socket.on('connect', () => setIsConnected(true))
+    socket.on('disconnect', () => setIsConnected(false))
+    socket.on('pong', () => setLastPong(new Date().toISOString()))
+    socket.on('chat', (payload) => setChat((chat) => [...chat, payload]))
 
     return () => {
       socket.off('connect')
       socket.off('disconnect')
       socket.off('pong')
+      socket.off('chat')
     }
   }, [])
-
-  const sendPing = () => {
-    socket.emit('ping')
-  }
 
   return (
     <div className='bg-gray-50'>
@@ -47,15 +44,17 @@ export const Chat: React.FC<ChatProps> = ({ nickname, roomId }) => {
               <p>Last pong: {lastPong || '-'}</p>
               <button
                 className='bg-teal-500 hover:bg-teal-400 text-sm px-2 py-1 block rounded-lg focus:ring-4 focus:ring-teal-400'
-                onClick={sendPing}
+                onClick={() => socket.emit('ping')}
               >
                 Send ping
               </button>
             </div>
-            <div>
-              <span className='font-bold'>andikabahari</span>
-              <span className='ml-5'>Lorem ipsum dolor sit amet.</span>
-            </div>
+            {chat.map((payload) => (
+              <div>
+                <span className='font-bold'>{payload.nickname}</span>
+                <span className='ml-5'>{payload.message}</span>
+              </div>
+            ))}
           </div>
           <div className='bg-gray-200 p-4'>
             <div className='flex'>
@@ -64,8 +63,22 @@ export const Chat: React.FC<ChatProps> = ({ nickname, roomId }) => {
                 type='text'
                 name='message'
                 placeholder='Your message'
+                onChange={(e) => setMessage(e.target.value)}
               />
-              <button className='bg-gray-500 text-white px-4 py-2 ml-3 rounded-xl focus:ring-4 focus:ring-gray-400'>
+              <button
+                className='bg-gray-500 text-white px-4 py-2 ml-3 rounded-xl focus:ring-4 focus:ring-gray-400'
+                onClick={() => {
+                  const payload = {
+                    nickname,
+                    roomId,
+                    message,
+                  }
+
+                  socket.emit('chat', payload)
+
+                  setMessage('')
+                }}
+              >
                 Send
               </button>
             </div>
