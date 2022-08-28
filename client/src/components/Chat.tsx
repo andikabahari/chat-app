@@ -44,6 +44,22 @@ export const Chat: React.FC<ChatProps> = ({ nickname, roomId }) => {
     }
   }, [])
 
+  const sendMessage = () => {
+    if (!message) return
+
+    const payload = {
+      nickname,
+      roomId,
+      message,
+    }
+    socket.emit('chat', payload)
+
+    setMessage(null)
+    if (inputRef.current) {
+      inputRef.current.value = ''
+    }
+  }
+
   return (
     <div className='bg-gray-50'>
       <div className='container max-w-screen-lg mx-auto'>
@@ -84,25 +100,12 @@ export const Chat: React.FC<ChatProps> = ({ nickname, roomId }) => {
                 name='message'
                 placeholder='Your message'
                 onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
                 ref={inputRef}
               />
               <button
                 className='bg-gray-500 text-white px-4 py-2 ml-3 rounded-xl focus:ring-4 focus:ring-gray-400'
-                onClick={() => {
-                  if (!message) return
-
-                  const payload = {
-                    nickname,
-                    roomId,
-                    message,
-                  }
-                  socket.emit('chat', payload)
-
-                  setMessage(null)
-                  if (inputRef.current) {
-                    inputRef.current.value = ''
-                  }
-                }}
+                onClick={() => sendMessage()}
               >
                 Send
               </button>
