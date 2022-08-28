@@ -9,6 +9,11 @@ export const Nickname: React.FC<NicknameProps> = ({ roomId }) => {
   const [nickname, setNickname] = useState<string>()
   const [showChat, setShowChat] = useState<boolean>()
 
+  const openChat = () => {
+    if (!nickname) return
+    setShowChat(true)
+  }
+
   if (showChat && nickname) {
     return <Chat nickname={nickname} roomId={roomId} />
   }
@@ -24,10 +29,11 @@ export const Nickname: React.FC<NicknameProps> = ({ roomId }) => {
             name='nickname'
             placeholder='Your nickname'
             onChange={(e) => setNickname(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && openChat()}
           />
           <button
             className='bg-sky-500 hover:bg-sky-400 px-4 py-2 block w-full rounded-lg focus:ring-4 focus:ring-sky-400'
-            onClick={() => setShowChat(true)}
+            onClick={() => openChat()}
           >
             Submit
           </button>
