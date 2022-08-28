@@ -20,7 +20,8 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => console.log('user disconnected'))
   socket.on('ping', () => io.emit('pong'))
-  socket.on('chat', (payload) => io.emit('chat', payload))
+  socket.on('chat', (payload) => io.in(payload.roomId).emit('chat', payload))
+  socket.on('join', (roomId) => socket.join(roomId))
 })
 
 server.listen(port, () => console.log(`Server running on port ${port}`))

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import io from 'socket.io-client'
 
 const socket = io('http://localhost:5000')
@@ -20,17 +20,26 @@ export const Chat: React.FC<ChatProps> = ({ nickname, roomId }) => {
   const [chat, setChat] = useState<ChatPayload[]>([])
   const [message, setMessage] = useState<string | null>(null)
 
+  const initialRender = useRef(false)
+
   useEffect(() => {
     socket.on('connect', () => setIsConnected(true))
     socket.on('disconnect', () => setIsConnected(false))
     socket.on('pong', () => setLastPong(new Date().toISOString()))
     socket.on('chat', (payload) => setChat((chat) => [...chat, payload]))
 
+    if (!initialRender.current) {
+      console.log(roomId)
+      socket.emit('join', roomId)
+    }
+
     return () => {
       socket.off('connect')
       socket.off('disconnect')
       socket.off('pong')
       socket.off('chat')
+
+      initialRender.current = true
     }
   }, [])
 
@@ -49,8 +58,8 @@ export const Chat: React.FC<ChatProps> = ({ nickname, roomId }) => {
                 Send ping
               </button>
             </div>
-            {chat.map((payload) => (
-              <div>
+            {chat.map((payload, index) => (
+              <div key={index}>
                 <span className='font-bold'>{payload.nickname}</span>
                 <span className='ml-5'>{payload.message}</span>
               </div>
