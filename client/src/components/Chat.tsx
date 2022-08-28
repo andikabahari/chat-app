@@ -21,6 +21,7 @@ export const Chat: React.FC<ChatProps> = ({ nickname, roomId }) => {
   const [message, setMessage] = useState<string | null>(null)
 
   const initialRender = useRef(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     socket.on('connect', () => setIsConnected(true))
@@ -83,19 +84,24 @@ export const Chat: React.FC<ChatProps> = ({ nickname, roomId }) => {
                 name='message'
                 placeholder='Your message'
                 onChange={(e) => setMessage(e.target.value)}
+                ref={inputRef}
               />
               <button
                 className='bg-gray-500 text-white px-4 py-2 ml-3 rounded-xl focus:ring-4 focus:ring-gray-400'
                 onClick={() => {
+                  if (!message) return
+
                   const payload = {
                     nickname,
                     roomId,
                     message,
                   }
-
                   socket.emit('chat', payload)
 
-                  setMessage('')
+                  setMessage(null)
+                  if (inputRef.current) {
+                    inputRef.current.value = ''
+                  }
                 }}
               >
                 Send
